@@ -1,0 +1,198 @@
+/* Eye Contact Coach Overlay - Modern Design */
+
+#eye-contact-coach-overlay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Main Status Badge */
+.ecc-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 200px;
+}
+
+.ecc-status-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
+/* Icon */
+#ecc-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.ecc-status-badge:hover #ecc-icon {
+  transform: scale(1.1);
+}
+
+/* Status Text */
+#ecc-text {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+/* Good Eye Contact State */
+.ecc-status-good {
+  border: 2px solid rgba(74, 222, 128, 0.5);
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.95), rgba(20, 83, 45, 0.95));
+}
+
+.ecc-status-good #ecc-text {
+  color: #4ade80;
+  text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+}
+
+/* Looking Away State */
+.ecc-status-away {
+  border: 2px solid rgba(248, 113, 113, 0.5);
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.95), rgba(153, 27, 27, 0.95));
+}
+
+.ecc-status-away #ecc-text {
+  color: #f87171;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.3);
+}
+
+/* Loading State */
+.ecc-status-loading {
+  border: 2px solid rgba(148, 163, 184, 0.5);
+  background: linear-gradient(135deg, rgba(51, 65, 85, 0.95), rgba(71, 85, 105, 0.95));
+}
+
+.ecc-status-loading #ecc-text {
+  color: #94a3b8;
+  text-shadow: 0 0 10px rgba(148, 163, 184, 0.3);
+}
+
+.ecc-status-loading #ecc-icon {
+  animation: ecc-spin 1.5s linear infinite;
+}
+
+@keyframes ecc-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Warning Box */
+.ecc-warning-box {
+  margin-top: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: white;
+  box-shadow: 
+    0 4px 16px rgba(220, 38, 38, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  animation: ecc-pulse 1.5s ease-in-out infinite;
+}
+
+/* Stats Panel */
+.ecc-stats-panel {
+  margin-top: 8px;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.ecc-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.ecc-stat-row:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ecc-stat-label {
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.ecc-stat-value {
+  font-weight: 700;
+  font-size: 13px;
+  color: #e2e8f0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Stat Value Colors */
+.ecc-stat-value.good {
+  color: #4ade80;
+}
+
+.ecc-stat-value.warning {
+  color: #fbbf24;
+}
+
+.ecc-stat-value.danger {
+  color: #f87171;
+}
+
+/* Animations */
+@keyframes ecc-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes ecc-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ecc-status-badge {
+  animation: ecc-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, transform, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
