@@ -23,7 +23,7 @@ function LandingPage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://github.com/YOUR_USERNAME/eye-contact-coach/releases/latest"
+              href="https://github.com/Its-sato/eye-contact-coach/releases/latest"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
@@ -246,7 +246,7 @@ function LandingPage() {
           <p>Eye Contact Coach - ビデオ会議のコミュニケーションを改善</p>
           <div className="flex justify-center gap-6 mt-4">
             <a
-              href="https://github.com/YOUR_USERNAME/eye-contact-coach"
+              href="https://github.com/Its-sato/eye-contact-coach"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-slate-200 transition"
