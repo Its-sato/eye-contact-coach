@@ -36,39 +36,7 @@ function LandingPage() {
   <ScreenshotCarousel />
 </section>
 
-          <div className="flex justify-center mb-6">
-            <FaVideo className="text-6xl text-indigo-400" />
-          </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-cyan-400 to-indigo-400">
-            Eye Contact Coach
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-300 mb-8">
-            ビデオ会議中のアイコンタクトを改善するChrome拡張機能
-          </p>
-          <p className="text-lg text-slate-400 mb-12">
-            AIがリアルタイムであなたの姿勢を分析し、より良いコミュニケーションをサポートします
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://github.com/Its-sato/eye-contact-coach/releases/latest"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
-            >
-              <FaDownload />
-              拡張機能をダウンロード
-            </a>
-            <Link
-              to="/demo"
-              className="inline-flex items-center gap-3 bg-slate-800 hover:bg-slate-700 border-2 border-slate-700 px-8 py-4 rounded-xl font-bold text-lg transition-all"
-            >
-              <FaVideo />
-              Webアプリで試す
-            </Link>
-          </div>
-        </div>
-      </section>
+
 
       {/* Features Section */}
       <section className="container mx-auto px-6 py-16">
