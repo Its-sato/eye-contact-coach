@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   base: './', // Use relative paths for extension compatibility
   build: {
-    outDir: '../chrome-extension/webapp',
+    // Use 'dist' for Netlify, '../chrome-extension/webapp' for extension
+    outDir: process.env.NETLIFY ? 'dist' : '../chrome-extension/webapp',
     emptyOutDir: true,
     rollupOptions: {
       output: {
