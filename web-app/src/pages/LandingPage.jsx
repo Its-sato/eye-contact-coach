@@ -5,250 +5,267 @@ import ScreenshotCarousel from '../components/ScreenshotCarousel';
 
 function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 font-sans selection:bg-indigo-500/30">
+      {/* Navbar */}
+      <nav className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <Link to="/" className="flex items-center gap-2 font-bold text-xl hover:text-indigo-400 transition">
+            <FaVideo className="text-indigo-400" />
+            <span>Eye Contact Coach</span>
+          </Link>
+          <div className="hidden md:flex gap-8 text-slate-300 text-sm font-medium">
+            <a href="#features" className="hover:text-indigo-400 transition">機能</a>
+            <a href="#demo" className="hover:text-indigo-400 transition">デモ画面</a>
+            <a href="#installation" className="hover:text-indigo-400 transition">インストール</a>
+            <a href="#usage" className="hover:text-indigo-400 transition">使い方</a>
+          </div>
+          <Link
+            to="/demo"
+            className="hidden sm:inline-flex bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-full font-bold text-sm transition shadow-lg shadow-indigo-500/20"
+          >
+            Web版で試す
+          </Link>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <section className="relative flex items-center justify-center text-center py-24 bg-cover bg-center" style={{ backgroundImage: "url('https://source.unsplash.com/featured/1600x900?technology')" }}>
-  <div className="absolute inset-0 bg-black/50" />
-  <div className="relative z-10 max-w-3xl mx-auto px-4">
-    <FaVideo className="text-6xl text-indigo-400 mx-auto mb-6" />
-    <h1 className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-cyan-400 to-indigo-400 mb-6">
-      Eye Contact Coach
-    </h1>
-    <p className="text-xl md:text-2xl text-slate-300 mb-8">
-      ビデオ会議中のアイコンタクトを改善するChrome拡張機能
-    </p>
-    <p className="text-lg text-slate-400 mb-12">
-      AIがリアルタイムで姿勢を分析し、快適なコミュニケーションをサポートします
-    </p>
-    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="https://github.com/Its-sato/eye-contact-coach/releases/latest" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105">
-        <FaDownload /> 拡張機能をダウンロード
-      </a>
-      <Link to="/demo" className="inline-flex items-center gap-3 bg-slate-800 hover:bg-slate-700 border-2 border-slate-700 px-8 py-4 rounded-xl font-bold text-lg transition-all">
-        <FaVideo /> Webアプリで試す
-      </Link>
-    </div>
-  </div>
-</section>
+      <section className="relative flex items-center justify-center text-center pt-32 pb-24 bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop')" }}>
+        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
+        
+        {/* Animated Background Elements */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
 
-<section className="container mx-auto px-6 py-12">
-  <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">デモ画面</h2>
-  <ScreenshotCarousel />
-</section>
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium mb-8">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            v1.0.0 Now Available
+          </div>
 
+          <h1 className="text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-white to-cyan-400 mb-8 tracking-tight leading-tight">
+            Eye Contact Coach
+          </h1>
+          <p className="text-xl md:text-2xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+            ビデオ会議の印象を、AIが変える。<br />
+            リアルタイムの姿勢分析で、あなたのコミュニケーションをサポート。
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="https://github.com/Its-sato/eye-contact-coach/releases/latest" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
+              <FaDownload className="text-indigo-600 group-hover:scale-110 transition-transform" /> 
+              <span>拡張機能をダウンロード</span>
+            </a>
+            <Link to="/demo" className="inline-flex items-center gap-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 px-8 py-4 rounded-full font-bold text-lg transition-all hover:bg-slate-700 backdrop-blur-sm">
+              <FaVideo /> Webアプリでデモ
+            </Link>
+          </div>
+        </div>
+      </section>
 
+      {/* Demo Section */}
+      <section id="demo" className="container mx-auto px-6 py-24 scroll-mt-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-200 to-cyan-200">
+            実際の画面
+          </h2>
+          <p className="text-slate-400 text-lg">シンプルなオーバーレイで、会議の邪魔をしません</p>
+        </div>
+        <div className="relative">
+          <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 rounded-3xl blur-xl" />
+          <div className="relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+            <ScreenshotCarousel />
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-6 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">主な機能</h2>
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="bg-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-slate-800">
-            <div className="text-4xl mb-4 text-indigo-400">🎯</div>
-            <h3 className="text-xl font-bold mb-3">リアルタイム分析</h3>
-            <p className="text-slate-400">
-              AIがカメラ映像から姿勢を分析し、即座にフィードバックを提供します
+      <section id="features" className="container mx-auto px-6 py-24 bg-slate-900/30 scroll-mt-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">主な機能</h2>
+          <p className="text-slate-400 text-lg">AI技術を活用した高度な分析機能</p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="group bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-indigo-500/50 transition-all hover:shadow-2xl hover:shadow-indigo-500/10">
+            <div className="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
+            <h3 className="text-xl font-bold mb-4 text-slate-100">リアルタイム分析</h3>
+            <p className="text-slate-400 leading-relaxed">
+              ブラウザ上で動作する軽量AIモデルが、あなたの姿勢と視線をリアルタイムで解析。プライバシーを守りながら、即座にフィードバックを提供します。
             </p>
           </div>
           
-          <div className="bg-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-slate-800">
-            <div className="text-4xl mb-4 text-cyan-400">📊</div>
-            <h3 className="text-xl font-bold mb-3">詳細な統計</h3>
-            <p className="text-slate-400">
-              セッション時間、気が散った回数、姿勢の分布を円グラフで可視化
+          <div className="group bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-cyan-500/50 transition-all hover:shadow-2xl hover:shadow-cyan-500/10">
+            <div className="w-14 h-14 bg-cyan-500/10 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">📊</div>
+            <h3 className="text-xl font-bold mb-4 text-slate-100">詳細な統計レポート</h3>
+            <p className="text-slate-400 leading-relaxed">
+              会議終了後に、アイコンタクトの頻度や姿勢の変化をグラフで可視化。自分の癖を客観的なデータとして振り返ることができます。
             </p>
           </div>
           
-          <div className="bg-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-slate-800">
-            <div className="text-4xl mb-4 text-purple-400">⚙️</div>
-            <h3 className="text-xl font-bold mb-3">カスタマイズ可能</h3>
-            <p className="text-slate-400">
-              警告のしきい値、オーバーレイの位置、表示項目を自由に設定
+          <div className="group bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-purple-500/50 transition-all hover:shadow-2xl hover:shadow-purple-500/10">
+            <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">⚙️</div>
+            <h3 className="text-xl font-bold mb-4 text-slate-100">完全なカスタマイズ</h3>
+            <p className="text-slate-400 leading-relaxed">
+              通知の感度、表示位置、警告のタイミングなどを自由に設定可能。あなたの作業環境に合わせて最適化できます。
             </p>
           </div>
         </div>
       </section>
 
       {/* Installation Guide */}
-      <section className="container mx-auto px-6 py-16">
+      <section id="installation" className="container mx-auto px-6 py-24 scroll-mt-20">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">インストール方法</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">インストール手順</h2>
+            <p className="text-slate-400 text-lg">わずか3ステップで利用開始できます</p>
+          </div>
           
-          <div className="bg-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-slate-800">
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-bold">
-                  1
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">拡張機能をダウンロード</h3>
-                  <p className="text-slate-400 mb-3">
-                    GitHubのリリースページから最新版の<code className="bg-slate-800 px-2 py-1 rounded">chrome-extension.zip</code>をダウンロードします。
+          <div className="relative">
+            {/* Connecting Line */}
+            <div className="absolute left-[27px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-indigo-500 via-cyan-500 to-slate-800 md:left-1/2 md:-ml-px hidden md:block"></div>
+
+            <div className="space-y-12">
+              {/* Step 1 */}
+              <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                <div className="flex-1 md:text-right">
+                  <h3 className="text-xl font-bold mb-2 text-indigo-400">Step 1</h3>
+                  <h4 className="text-xl font-bold mb-3">拡張機能をダウンロード</h4>
+                  <p className="text-slate-400 mb-4">
+                    GitHubのリリースページから最新の<code className="bg-slate-800 px-2 py-1 rounded text-sm mx-1 text-slate-300">chrome-extension.zip</code>をダウンロードし、解凍します。
                   </p>
-                  <a
-                    href="https://github.com/Its-sato/eye-contact-coach/releases/latest"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300"
-                  >
-                    <FaGithub />
-                    GitHubリリースページ →
+                  <a href="https://github.com/Its-sato/eye-contact-coach/releases/latest" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium">
+                    <FaGithub /> GitHubリリースページ <span className="text-xs">↗</span>
                   </a>
                 </div>
+                <div className="relative flex-shrink-0 z-10 w-14 h-14 bg-slate-900 border-4 border-indigo-500 rounded-full flex items-center justify-center text-xl font-bold shadow-[0_0_20px_rgba(99,102,241,0.5)]">1</div>
+                <div className="flex-1"></div>
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-bold">
-                  2
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">ZIPファイルを解凍</h3>
+              {/* Step 2 */}
+              <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                <div className="flex-1 md:order-last">
+                  <h3 className="text-xl font-bold mb-2 text-cyan-400">Step 2</h3>
+                  <h4 className="text-xl font-bold mb-3">拡張機能ページを開く</h4>
                   <p className="text-slate-400">
-                    ダウンロードしたZIPファイルを任意の場所に解凍します。
+                    Chromeのアドレスバーに<code className="bg-slate-800 px-2 py-1 rounded text-sm mx-1 text-slate-300">chrome://extensions</code>と入力して開きます。
+                    <br /><span className="text-sm opacity-70">（または メニュー &gt; 拡張機能 &gt; 拡張機能を管理）</span>
                   </p>
                 </div>
+                <div className="relative flex-shrink-0 z-10 w-14 h-14 bg-slate-900 border-4 border-cyan-500 rounded-full flex items-center justify-center text-xl font-bold shadow-[0_0_20px_rgba(6,182,212,0.5)]">2</div>
+                <div className="flex-1"></div>
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-bold">
-                  3
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Chrome拡張機能ページを開く</h3>
-                  <p className="text-slate-400 mb-2">
-                    Chromeで<code className="bg-slate-800 px-2 py-1 rounded">chrome://extensions</code>を開きます。
-                  </p>
+              {/* Step 3 */}
+              <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                <div className="flex-1 md:text-right">
+                  <h3 className="text-xl font-bold mb-2 text-purple-400">Step 3</h3>
+                  <h4 className="text-xl font-bold mb-3">読み込みと有効化</h4>
                   <p className="text-slate-400">
-                    または、メニュー → その他のツール → 拡張機能
+                    右上の「デベロッパーモード」をONにし、「パッケージ化されていない拡張機能を読み込む」から、解凍したフォルダを選択します。
                   </p>
                 </div>
+                <div className="relative flex-shrink-0 z-10 w-14 h-14 bg-slate-900 border-4 border-purple-500 rounded-full flex items-center justify-center text-xl font-bold shadow-[0_0_20px_rgba(168,85,247,0.5)]">3</div>
+                <div className="flex-1"></div>
               </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-bold">
-                  4
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">デベロッパーモードをON</h3>
-                  <p className="text-slate-400">
-                    右上の「デベロッパーモード」トグルをONにします。
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-bold">
-                  5
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">拡張機能を読み込む</h3>
-                  <p className="text-slate-400 mb-2">
-                    「パッケージ化されていない拡張機能を読み込む」をクリックします。
-                  </p>
-                  <p className="text-slate-400">
-                    解凍したフォルダを選択してください。
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-green-600 rounded-full flex items-center justify-center font-bold">
-                  ✓
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">完了！</h3>
-                  <p className="text-slate-400">
-                    Google Meetを開くと、自動的に分析が開始されます。
-                  </p>
-                </div>
+            </div>
+            
+            <div className="mt-16 text-center">
+              <div className="inline-flex items-center gap-3 bg-green-500/10 text-green-400 px-6 py-3 rounded-full border border-green-500/20">
+                <span className="text-xl">🎉</span>
+                <strong>準備完了！</strong> Google Meetを開くと自動的に起動します
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How to Use */}
-      <section className="container mx-auto px-6 py-16">
+      {/* How to Use Section */}
+      <section id="usage" className="container mx-auto px-6 py-24 bg-slate-900/30 scroll-mt-20">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">使い方</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">使い方</h2>
+            <p className="text-slate-400 text-lg">特別な操作は必要ありません</p>
+          </div>
           
-          <div className="space-y-6">
-            <div className="bg-slate-900/50 backdrop-blur-sm p-6 rounded-xl border border-slate-800">
-              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <span className="text-2xl">🚀</span>
-                自動起動
-              </h3>
-              <p className="text-slate-400">
-                Google MeetやZoomの会議に参加すると、自動的にカメラとAIモデルが起動します。
-              </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 flex gap-4">
+              <div className="text-4xl">🚀</div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">自動起動</h3>
+                <p className="text-slate-400">Google Meetに参加すると、自動で機能がONになります。</p>
+              </div>
             </div>
-
-            <div className="bg-slate-900/50 backdrop-blur-sm p-6 rounded-xl border border-slate-800">
-              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <span className="text-2xl">📊</span>
-                リアルタイム分析
-              </h3>
-              <p className="text-slate-400">
-                画面右上（設定で変更可能）にオーバーレイが表示され、統計情報がリアルタイムで更新されます。
-              </p>
+            <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 flex gap-4">
+              <div className="text-4xl">⚠️</div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">リアルタイム警告</h3>
+                <p className="text-slate-400">姿勢が悪くなったり、カメラから目を離すと優しく通知します。</p>
+              </div>
             </div>
-
-            <div className="bg-slate-900/50 backdrop-blur-sm p-6 rounded-xl border border-slate-800">
-              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <span className="text-2xl">⚠️</span>
-                即座の通知
-              </h3>
-              <p className="text-slate-400">
-                カメラから目を離すと、即座に警告が表示されます（3秒後に自動的に消えます）。
-              </p>
+            <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 flex gap-4">
+              <div className="text-4xl">📈</div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">分析レポート</h3>
+                <p className="text-slate-400">会議終了後、あなたのパフォーマンスを分析したレポートが表示されます。</p>
+              </div>
             </div>
-
-            <div className="bg-slate-900/50 backdrop-blur-sm p-6 rounded-xl border border-slate-800">
-              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <span className="text-2xl">📈</span>
-                セッションサマリー
-              </h3>
-              <p className="text-slate-400">
-                会議終了後、自動的に詳細な統計サマリーが表示されます。姿勢の分布を円グラフで確認できます。
-              </p>
+            <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 flex gap-4">
+              <div className="text-4xl">🔒</div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">プライバシー重視</h3>
+                <p className="text-slate-400">映像は全てブラウザ内で処理され、外部サーバーには送信されません。</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="container mx-auto px-6 py-20">
-        <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-indigo-900/50 to-cyan-900/50 backdrop-blur-sm p-12 rounded-2xl border border-indigo-800">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            今すぐ始めましょう
-          </h2>
-          <p className="text-lg text-slate-300 mb-8">
-            まずはWebアプリ版で試してみて、気に入ったら拡張機能をインストールしてください
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/demo"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
-            >
-              <FaVideo />
-              Webアプリで試す
-            </Link>
+      <section className="container mx-auto px-6 py-32">
+        <div className="relative max-w-4xl mx-auto text-center overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 to-slate-900 border border-indigo-500/30 p-12 md:p-20 shadow-2xl">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+          <div className="relative z-10">
+            <h2 className="text-3xl md:text-5xl font-bold mb-8 text-white">
+              あなたのオンライン会議を、<br/>もっと魅力的に。
+            </h2>
+            <p className="text-lg text-slate-300 mb-10 max-w-2xl mx-auto">
+              Eye Contact Coachはオープンソースで開発されています。<br/>
+              今すぐ無料でダウンロードして、違いを体験してください。
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="https://github.com/Its-sato/eye-contact-coach/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 bg-white text-indigo-900 hover:bg-slate-100 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-xl hover:scale-105"
+              >
+                <FaDownload />
+                今すぐダウンロード
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-8">
-        <div className="container mx-auto px-6 text-center text-slate-400">
-          <p>Eye Contact Coach - ビデオ会議のコミュニケーションを改善</p>
-          <div className="flex justify-center gap-6 mt-4">
-            <a
-              href="https://github.com/Its-sato/eye-contact-coach"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-slate-200 transition"
-            >
-              <FaGithub className="text-2xl" />
+      <footer className="border-t border-slate-800 bg-slate-950 py-12">
+        <div className="container mx-auto px-6 text-center">
+          <div className="flex items-center justify-center gap-2 font-bold text-xl mb-6 text-slate-200">
+            <FaVideo className="text-indigo-500" />
+            <span>Eye Contact Coach</span>
+          </div>
+          <p className="text-slate-500 mb-8 max-w-md mx-auto">
+            より良いオンラインコミュニケーションのためのオープンソースプロジェクト
+          </p>
+          <div className="flex justify-center gap-8 mb-8">
+            <a href="https://github.com/Its-sato/eye-contact-coach" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition transform hover:scale-110">
+              <FaGithub className="text-3xl" />
             </a>
+          </div>
+          <div className="text-slate-600 text-sm">
+            &copy; {new Date().getFullYear()} Eye Contact Coach. MIT License.
           </div>
         </div>
       </footer>
