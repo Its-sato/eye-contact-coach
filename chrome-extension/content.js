@@ -79,7 +79,7 @@ async function createOverlay() {
   overlayContainer.id = 'eye-contact-coach-overlay';
   
   const innerHTML = `
-    <div class="ecc-status-badge ecc-status-loading">
+    <div class="ecc-status-badge ecc-status-loading" style="display: none;">
       <span id="ecc-icon">⏳</span>
       <span id="ecc-text">Loading...</span>
     </div>
@@ -204,11 +204,37 @@ function updateUI(data) {
     statusBadge.className = "ecc-status-badge ecc-status-away";
   }
 
-  // Update Warning (respect settings)
-  if (isWarning && settings && settings.enableWarnings) {
+  // Notification timer for auto-hide
+  let notificationTimer = null;
+  let lastNotificationStatus = null;
+
+  // Update Warning - show immediately on bad posture, auto-hide after 3 seconds
+  if (!isContact && settings && settings.enableWarnings) {
+    // Show warning immediately when bad posture is detected
     warningElement.style.display = "block";
+    
+    // Only reset timer if this is a new bad posture detection
+    if (lastNotificationStatus !== data.status) {
+      lastNotificationStatus = data.status;
+      
+      // Clear existing timer
+      if (notificationTimer) {
+        clearTimeout(notificationTimer);
+      }
+      
+      // Auto-hide after 3 seconds
+      notificationTimer = setTimeout(() => {
+        warningElement.style.display = "none";
+      }, 3000);
+    }
   } else {
+    // Hide warning when good posture
     warningElement.style.display = "none";
+    lastNotificationStatus = null;
+    if (notificationTimer) {
+      clearTimeout(notificationTimer);
+      notificationTimer = null;
+    }
   }
 
   // Update Stats with color coding

@@ -1,23 +1,31 @@
 /**
- * EyeContactAnalyzer
+ * EyeContactAnalyzer - Multi-Class Posture Analysis
  *
- * Handles the logic for detecting eye contact state based on model probability.
+ * Handles the logic for detecting posture state based on model probability.
  * Features:
- * - Smoothing: Majority vote over the last N frames.
- * - Hysteresis: Time-based state locking (requires continuous bad state to trigger warning).
- * - Statistics: Tracks counts, durations, and rates.
+ * - Multi-class tracking (good_posture, looking_away, looking_down, slouching, fidgeting)
+ * - Smoothing: Majority vote over the last N frames
+ * - Hysteresis: Time-based state locking
+ * - Detailed statistics per class
  */
 export class EyeContactAnalyzer {
   constructor(options = {}) {
     // Configuration
-    this.historySize = options.historySize || 5; // Frames for majority vote
-    this.notContactThreshold = options.notContactThreshold || 2000; // ms to trigger warning
-    this.sampleRate = options.sampleRate || 100; // Expected ms between checks (approximation)
-    this.contactLabel = options.contactLabel || 'good_posture'; // The label representing good behavior
+    this.historySize = options.historySize || 5;
+    this.notContactThreshold = options.notContactThreshold || 2000;
+    this.sampleRate = options.sampleRate || 100;
+    this.contactLabel = options.contactLabel || 'good_posture';
+    
+    // All possible classes (3-class model)
+    this.allClasses = [
+      'good_posture',
+      'looking_away',
+      'looking_down'
+    ];
 
     // State
-    this.historyQueue = []; // Ring buffer for recent classifications
-    this.currentStatus = this.contactLabel; 
+    this.historyQueue = [];
+    this.currentStatus = this.contactLabel;
     this.lastStatusChangeTimestamp = Date.now();
     this.isWarningActive = false;
 
@@ -27,7 +35,13 @@ export class EyeContactAnalyzer {
     this.notContactDuration = 0;
     this.notContactCount = 0;
     
-    // Internal tracking for duration calculation during active non-contact
+    // Per-class duration tracking
+    this.classDurations = {};
+    this.allClasses.forEach(cls => {
+      this.classDurations[cls] = 0;
+    });
+    
+    // Internal tracking
     this.lastProcessTimestamp = Date.now();
   }
 
@@ -55,7 +69,12 @@ export class EyeContactAnalyzer {
     }
     const smoothedClass = this._getMajorityClass();
 
-    // 3. State Logic
+    // 3. Update class duration
+    if (this.classDurations[smoothedClass] !== undefined) {
+      this.classDurations[smoothedClass] += dt;
+    }
+
+    // 4. State Logic
     const isContactNow = (smoothedClass === this.contactLabel);
     const wasContactBefore = (this.currentStatus === this.contactLabel);
 
@@ -69,21 +88,21 @@ export class EyeContactAnalyzer {
       }
     }
 
-    // ROBUSTNESS: Always clear warning if we are in contact state
+    // Update not-contact duration
+    if (!isContactNow) {
+      this.notContactDuration += dt;
+    }
+
+    // Warning logic
     if (isContactNow) {
       this.isWarningActive = false;
-    } 
-    // Otherwise, check if we need to trigger warning
-    else {
-        this.notContactDuration += dt;
-        
-        // Only check duration if we are not already warning
-        if (!this.isWarningActive) {
-            const durationInState = timestamp - this.lastStatusChangeTimestamp;
-            if (durationInState >= this.notContactThreshold) {
-                this.isWarningActive = true;
-            }
+    } else {
+      if (!this.isWarningActive) {
+        const durationInState = timestamp - this.lastStatusChangeTimestamp;
+        if (durationInState >= this.notContactThreshold) {
+          this.isWarningActive = true;
         }
+      }
     }
 
     return {
@@ -106,8 +125,7 @@ export class EyeContactAnalyzer {
         maxClass = cls;
       }
     }
-    // If empty or tie, default to contact to be safe, or just raw
-    return maxClass || this.contactLabel; 
+    return maxClass || this.contactLabel;
   }
 
   getStats() {
@@ -115,15 +133,30 @@ export class EyeContactAnalyzer {
       ? (this.notContactDuration / this.totalDuration) * 100 
       : 0;
 
+    // Calculate percentage for each class
+    const classPercentages = {};
+    this.allClasses.forEach(cls => {
+      const duration = this.classDurations[cls] || 0;
+      const percentage = this.totalDuration > 0 
+        ? (duration / this.totalDuration) * 100 
+        : 0;
+      classPercentages[cls] = percentage.toFixed(1);
+    });
+
     return {
       notContactCount: this.notContactCount,
       notContactDurationSec: (this.notContactDuration / 1000).toFixed(1),
-      notContactRatio: ratio.toFixed(1)
+      notContactRatio: ratio.toFixed(1),
+      classPercentages: classPercentages,
+      classDurations: this.classDurations
     };
   }
   
   reset() {
     this.historyQueue = [];
     this.lastProcessTimestamp = Date.now();
+    this.allClasses.forEach(cls => {
+      this.classDurations[cls] = 0;
+    });
   }
 }

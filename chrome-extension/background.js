@@ -111,6 +111,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       chrome.storage.local.set({
         [`session_${tabId}_start`]: Date.now()
       });
+      
+      // Auto-open the popup to start camera and model
+      console.log("Background: Auto-starting camera for meeting");
+      chrome.windows.create({
+        url: chrome.runtime.getURL('webapp/index.html?auto=true'),
+        type: 'popup',
+        width: 400,
+        height: 300
+      });
     }
   }
 });
@@ -135,9 +144,15 @@ async function handleMeetingEnd(tabId) {
     const duration = Math.floor((Date.now() - startTime) / 1000); // seconds
     const endTime = new Date().toLocaleTimeString();
     
+    // Build URL with class percentages
+    const classParams = stats.classPercentages ? 
+      Object.entries(stats.classPercentages)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&') : '';
+    
     // Open summary page with stats
     const summaryUrl = chrome.runtime.getURL(
-      `summary.html?duration=${duration}&ratio=${stats.notContactRatio}&count=${stats.notContactCount}&totalDistracted=${stats.notContactDurationSec}&endTime=${encodeURIComponent(endTime)}`
+      `summary.html?duration=${duration}&ratio=${stats.notContactRatio}&count=${stats.notContactCount}&totalDistracted=${stats.notContactDurationSec}&endTime=${encodeURIComponent(endTime)}&${classParams}`
     );
     
     chrome.tabs.create({ url: summaryUrl });

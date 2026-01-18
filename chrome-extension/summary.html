@@ -187,6 +187,26 @@
         font-size: 13px;
         margin-top: 24px;
       }
+
+      .chart-container {
+        margin: 32px 0;
+        padding: 24px;
+        background: rgba(15, 23, 42, 0.4);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .chart-title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 20px;
+      }
+
+      #postureChart {
+        max-height: 300px;
+      }
     </style>
   </head>
   <body>
@@ -231,6 +251,12 @@
           </div>
         </div>
 
+        <!-- Posture Distribution Chart -->
+        <div class="chart-container">
+          <h3 class="chart-title">Posture Distribution</h3>
+          <canvas id="postureChart"></canvas>
+        </div>
+
         <div class="message" id="message">Keep up the great work!</div>
 
         <div class="actions">
@@ -246,6 +272,7 @@
       </div>
     </div>
 
+    <script src="chart.min.js"></script>
     <script src="summary.js"></script>
   </body>
 </html>

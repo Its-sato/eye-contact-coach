@@ -23,11 +23,24 @@ function App() {
   // Settings
   const [isWarningEnabled, setIsWarningEnabled] = useState(true);
   const [debugMode, setDebugMode] = useState(false);
-  const [flipHorizontal, setFlipHorizontal] = useState(true); // Default to true (standard TM behavior)
+  const [flipHorizontal, setFlipHorizontal] = useState(true);
+  
+  // Check if opened in auto mode (from Meet detection)
+  const [isAutoMode, setIsAutoMode] = useState(false);
 
   // Analyzer instance
   const analyzerRef = useRef(new EyeContactAnalyzer({ notContactThreshold: WARNING_DELAY }));
   const reqIdRef = useRef(null);
+
+  // Detect auto mode from URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const auto = urlParams.get('auto');
+    if (auto === 'true') {
+      setIsAutoMode(true);
+      console.log('Auto mode enabled - minimal UI');
+    }
+  }, []);
 
   // Load Model
   useEffect(() => {
@@ -45,45 +58,54 @@ function App() {
     loadModel();
   }, []);
 
-  // Inference Loop
+  // Auto-reset analyzer on mount (for fresh session)
+  useEffect(() => {
+    analyzerRef.current = new EyeContactAnalyzer({ notContactThreshold: WARNING_DELAY });
+    console.log('Analyzer reset for new session');
+  }, []);
+
+  // Inference Loop - using setInterval instead of requestAnimationFrame
+  // to ensure it continues running even when window is minimized
   useEffect(() => {
     if (!model || !videoRef.current || isCameraLoading) return;
 
     const loop = async () => {
       if (videoRef.current && videoRef.current.readyState === 4) {
-        // Estimate pose via Teachable Machine standard method
-        // flipHorizontal: true is default for webcam in TM. 
-        // If false, it might be mirroring the wrong way relative to training.
-        const { posenetOutput } = await model.estimatePose(videoRef.current, flipHorizontal);
-        
-        // Prediction
-        const prediction = await model.predict(posenetOutput);
+        try {
+          // Estimate pose via Teachable Machine standard method
+          const { posenetOutput } = await model.estimatePose(videoRef.current, flipHorizontal);
+          
+          // Prediction
+          const prediction = await model.predict(posenetOutput);
 
-        // Analyze
-        const result = analyzerRef.current.process(prediction);
-        
-        setStatus(result.status);
-        setIsContact(result.isContact); 
-        setIsWarning(result.isWarning);
-        setStats(result.stats);
+          // Analyze
+          const result = analyzerRef.current.process(prediction);
+          
+          setStatus(result.status);
+          setIsContact(result.isContact); 
+          setIsWarning(result.isWarning);
+          setStats(result.stats);
 
-        // Debug info
-        if (debugMode) {
-             const best = prediction.reduce((p, c) => p.probability > c.probability ? p : c);
-             setDebugInfo({ 
-                 rawClass: best.className, 
-                 confidence: (best.probability * 100).toFixed(1) + "%",
-                 all: prediction
-             });
+          // Debug info
+          if (debugMode) {
+            const best = prediction.reduce((p, c) => p.probability > c.probability ? p : c);
+            setDebugInfo({ 
+              rawClass: best.className, 
+              confidence: (best.probability * 100).toFixed(1) + "%",
+              all: prediction
+            });
+          }
+        } catch (error) {
+          console.error('Inference error:', error);
         }
       }
-      reqIdRef.current = requestAnimationFrame(loop);
     };
 
-    loop();
+    // Run inference every 100ms (10 FPS)
+    const intervalId = setInterval(loop, 100);
 
     return () => {
-      if (reqIdRef.current) cancelAnimationFrame(reqIdRef.current);
+      clearInterval(intervalId);
     };
   }, [model, isCameraLoading, debugMode, flipHorizontal]);
 
@@ -136,6 +158,63 @@ function App() {
     setStats({ notContactCount: 0, notContactDurationSec: 0, notContactRatio: 0 });
     setIsWarning(false);
   };
+
+  // Auto-minimize when ready in auto mode
+  useEffect(() => {
+    if (isAutoMode && !isCameraLoading && !isModelLoading) {
+      // Wait 1 second to show "Ready" message, then minimize
+      const timer = setTimeout(() => {
+        // Minimize the window by moving it off-screen
+        chrome.windows.getCurrent((win) => {
+          chrome.windows.update(win.id, {
+            state: 'minimized'
+          });
+        });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAutoMode, isCameraLoading, isModelLoading]);
+
+  // Minimal UI for auto mode
+  if (isAutoMode) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col items-center justify-center p-6">
+        {/* Hidden video for inference */}
+        <video 
+          ref={videoRef} 
+          autoPlay 
+          playsInline 
+          muted
+          style={{ display: 'none' }}
+        />
+        
+        <div className="bg-slate-900/50 p-8 rounded-xl border border-slate-800 backdrop-blur-sm max-w-sm w-full">
+          <div className="text-center">
+            {isCameraLoading && (
+              <div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-3"></div>
+                <p className="text-slate-300 font-medium">Starting camera...</p>
+              </div>
+            )}
+            
+            {!isCameraLoading && isModelLoading && (
+              <div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-3"></div>
+                <p className="text-slate-300 font-medium">Loading model...</p>
+              </div>
+            )}
+            
+            {!isCameraLoading && !isModelLoading && (
+              <div>
+                <div className="text-green-500 text-5xl mb-2">✓</div>
+                <p className="text-green-400 font-semibold text-lg">Ready!</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col items-center justify-center p-6">
