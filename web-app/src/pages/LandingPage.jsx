@@ -1,11 +1,125 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaChrome, FaGithub, FaVideo, FaChartBar, FaCog, FaDownload } from 'react-icons/fa';
+import { FaChrome, FaGithub, FaVideo, FaChartBar, FaCog, FaDownload, FaTimes, FaCheck, FaStar } from 'react-icons/fa';
 import ScreenshotCarousel from '../components/ScreenshotCarousel';
 
 function LandingPage() {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500/30">
+      {/* Version Selection Modal */}
+      {showModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-fadeIn overflow-y-auto"
+          onClick={() => setShowModal(false)}
+        >
+          <div 
+            className="relative max-w-5xl w-full bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl my-8 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+            >
+              <FaTimes />
+            </button>
+
+            {/* Header */}
+            <div className="text-center pt-4 pb-3 px-4 border-b border-slate-800">
+              <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                使い方を選択
+              </h2>
+            </div>
+
+            {/* Comparison Grid */}
+            <div className="grid md:grid-cols-2 gap-3 p-4">
+              {/* Chrome Extension - RECOMMENDED */}
+              <div className="relative group">
+                {/* Recommended Badge */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                  <div className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
+                    <FaStar className="text-yellow-300" />
+                    おすすめ
+                  </div>
+                </div>
+
+
+                <div className="bg-slate-950 rounded-xl border-2 border-indigo-500/50 p-4 h-full flex flex-col hover:border-indigo-500 transition-all shadow-xl shadow-indigo-500/20">
+                  {/* Icon & Title */}
+                  <div className="text-center mb-2">
+                    <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center mx-auto mb-2">
+                      <FaChrome className="text-2xl text-indigo-400" />
+                    </div>
+                    <h3 className="text-base font-bold text-white">Chrome拡張機能版</h3>
+                  </div>
+
+                  {/* Pros */}
+                  <div className="mb-2 flex-grow">
+                    <ul className="space-y-0.5 text-xs text-slate-300">
+                      <li>✓ Meet自動統合・オーバーレイ</li>
+                      <li>✓ 自動レポート・統計保存</li>
+                      <li className="text-slate-500 text-[10px] mt-1">※インストール3分/Chrome限定</li>
+                    </ul>
+                  </div>
+
+                  {/* CTA */}
+                  <a
+                    href="https://github.com/Its-sato/eye-contact-coach/releases/latest"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-6 py-4 rounded-xl font-bold text-center transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2"
+                  >
+                    <FaDownload />
+                    拡張機能をダウンロード
+                  </a>
+                </div>
+              </div>
+
+              {/* Web Version */}
+              <div className="relative">
+                <div className="bg-slate-950 rounded-xl border border-slate-700 p-4 h-full flex flex-col hover:border-slate-600 transition-all">
+                  {/* Icon & Title */}
+                  <div className="text-center mb-2">
+                    <div className="w-10 h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center mx-auto mb-2">
+                      <FaVideo className="text-2xl text-cyan-400" />
+                    </div>
+                    <h3 className="text-base font-bold text-white">Web版</h3>
+                  </div>
+
+                  {/* Pros */}
+                  <div className="mb-2 flex-grow">
+                    <ul className="space-y-0.5 text-xs text-slate-300">
+                      <li>✓ インストール不要</li>
+                      <li>✓ 基本機能を体験</li>
+                      <li className="text-slate-500 text-[10px] mt-1">※Meet連携・自動保存なし</li>
+                    </ul>
+                  </div>
+
+                  {/* CTA */}
+                  <Link
+                    to="/demo"
+                    onClick={() => setShowModal(false)}
+                    className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-6 py-4 rounded-xl font-bold text-center transition-all flex items-center justify-center gap-2"
+                  >
+                    <FaVideo />
+                    Web版を試す
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Note */}
+            <div className="px-4 pb-3 text-center">
+              <p className="text-xs text-slate-500">
+                💡 本格利用は<strong className="text-indigo-400">Chrome拡張機能版</strong>推奨
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -53,13 +167,22 @@ function LandingPage() {
             リアルタイムの姿勢分析で、あなたのコミュニケーションをサポート。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="https://github.com/Its-sato/eye-contact-coach/releases/latest" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
-              <FaDownload className="text-indigo-600 group-hover:scale-110 transition-transform" /> 
-              <span>拡張機能をダウンロード</span>
+            <button 
+              onClick={() => setShowModal(true)}
+              className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-10 py-5 rounded-full font-bold text-xl transition-all hover:scale-105 hover:shadow-[0_0_60px_-10px_rgba(99,102,241,0.8)] shadow-2xl"
+            >
+              <FaDownload className="group-hover:scale-110 transition-transform" /> 
+              <span>使ってみる</span>
+            </button>
+            <a 
+              href="https://github.com/Its-sato/eye-contact-coach" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center gap-3 text-slate-300 hover:text-white px-6 py-3 rounded-full font-medium text-lg transition-all hover:bg-slate-800/50 backdrop-blur-sm"
+            >
+              <FaGithub /> 
+              <span>GitHub</span>
             </a>
-            <Link to="/demo" className="inline-flex items-center gap-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 px-8 py-4 rounded-full font-bold text-lg transition-all hover:bg-slate-700 backdrop-blur-sm">
-              <FaVideo /> Webアプリでデモ
-            </Link>
           </div>
         </div>
       </section>
