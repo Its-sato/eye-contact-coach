@@ -93,16 +93,12 @@ export class EyeContactAnalyzer {
       this.notContactDuration += dt;
     }
 
-    // Warning logic
+    // Warning logic - activate immediately on bad posture
     if (isContactNow) {
       this.isWarningActive = false;
     } else {
-      if (!this.isWarningActive) {
-        const durationInState = timestamp - this.lastStatusChangeTimestamp;
-        if (durationInState >= this.notContactThreshold) {
-          this.isWarningActive = true;
-        }
-      }
+      // Activate warning immediately when bad posture is detected
+      this.isWarningActive = true;
     }
 
     return {
@@ -154,9 +150,21 @@ export class EyeContactAnalyzer {
   
   reset() {
     this.historyQueue = [];
-    this.lastProcessTimestamp = Date.now();
+    this.currentStatus = this.contactLabel;
+    this.lastStatusChangeTimestamp = Date.now();
+    this.isWarningActive = false;
+    
+    // Reset statistics
+    this.startTime = Date.now();
+    this.totalDuration = 0;
+    this.notContactDuration = 0;
+    this.notContactCount = 0;
+    
+    // Reset class durations
     this.allClasses.forEach(cls => {
       this.classDurations[cls] = 0;
     });
+    
+    this.lastProcessTimestamp = Date.now();
   }
 }

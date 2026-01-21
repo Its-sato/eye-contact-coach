@@ -159,6 +159,24 @@ async function handleMeetingEnd(tabId) {
     
     // Clean up session data
     chrome.storage.local.remove([`session_${tabId}_start`]);
+    
+    // Send reset signal to web app to clear statistics
+    chrome.storage.local.set({ 
+      resetStats: true,
+      eyeContactStatus: {
+        isContact: true,
+        status: 'good_posture',
+        isWarning: false,
+        stats: {
+          notContactCount: 0,
+          notContactDurationSec: '0.0',
+          notContactRatio: '0.0',
+          classPercentages: {},
+          classDurations: {}
+        },
+        timestamp: Date.now()
+      }
+    });
   }
 }
 

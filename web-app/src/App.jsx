@@ -9,7 +9,7 @@ import './App.css';
 
 // Constants
 const MODEL_URL = '/model/'; // Path to model files in public/
-const WARNING_DELAY = 2000; // ms
+const WARNING_DELAY = 0; // ms - Immediate response to bad posture
 
 function App() {
   const { videoRef, stream, isLoading: isCameraLoading } = useCamera();
@@ -149,6 +149,27 @@ function App() {
       });
     }
   }, [isContact, status, isWarning, stats, debugMode]);
+
+  // Listen for reset signal from Chrome Extension (when meeting ends)
+  useEffect(() => {
+    if (typeof chrome === 'undefined' || !chrome.storage) return;
+    
+    const handleStorageChange = (changes, area) => {
+      if (area === 'local' && changes.resetStats && changes.resetStats.newValue === true) {
+        console.log('Received reset signal from Chrome extension');
+        handleReset();
+        // Clear the reset flag
+        chrome.storage.local.set({ resetStats: false });
+      }
+    };
+    
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
+  }, []);
+
 
   const [debugInfo, setDebugInfo] = useState(null);
 
