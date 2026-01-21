@@ -65,15 +65,14 @@ function LandingPage() {
                   </div>
 
                   {/* CTA */}
-                  <a
-                    href="https://github.com/Its-sato/eye-contact-coach/releases/latest"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to="/install"
+                    onClick={() => setShowModal(false)}
                     className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-6 py-4 rounded-xl font-bold text-center transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2"
                   >
                     <FaDownload />
-                    拡張機能をダウンロード
-                  </a>
+                    インストール方法を見る
+                  </Link>
                 </div>
               </div>
 
