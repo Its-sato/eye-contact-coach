@@ -6,15 +6,27 @@ import LandingPage from './pages/LandingPage.jsx';
 import InstallationGuide from './pages/InstallationGuide.jsx';
 import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/demo" element={<App />} />
-        <Route path="/install" element={<InstallationGuide />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
-);
+const root = ReactDOM.createRoot(document.getElementById('root'));
+const params = new URLSearchParams(window.location.search);
+
+// If opened in auto mode (Extension Popup), skip router and render App directly
+if (params.get('auto') === 'true') {
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  root.render(
+    <React.StrictMode>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/demo" element={<App />} />
+          <Route path="/install" element={<InstallationGuide />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </React.StrictMode>
+  );
+}

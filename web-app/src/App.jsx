@@ -8,7 +8,7 @@ import { FaEye, FaEyeSlash, FaVideo, FaCog, FaChartBar } from 'react-icons/fa';
 import './App.css';
 
 // Constants
-const MODEL_URL = '/model/'; // Path to model files in public/
+const MODEL_URL = 'model/'; // Relative path for extension compatibility in public/
 const WARNING_DELAY = 0; // ms - Immediate response to bad posture
 
 function App() {
@@ -182,56 +182,120 @@ function App() {
 
   // Auto-minimize when ready in auto mode
   useEffect(() => {
+    // Only minimize if everything is loaded
     if (isAutoMode && !isCameraLoading && !isModelLoading) {
-      // Wait 1 second to show "Ready" message, then minimize
+       // Optional: You might want to remove the auto-minimize or make it optional
+       // if the user wants to see the debug info provided in the popup.
+       // For now, I'll increase the timeout so they have a chance to see it,
+       // or we could comment it out if the user wants to monitor the popup.
+       // User request: "popup window to show... info", so maybe don't minimize?
+       // Leaving it but with a longer delay or maybe removing it is better.
+       // Let's comment out auto-minimize for now to let user see the status.
+       /*
       const timer = setTimeout(() => {
-        // Minimize the window by moving it off-screen
         chrome.windows.getCurrent((win) => {
           chrome.windows.update(win.id, {
             state: 'minimized'
           });
         });
-      }, 1000);
+      }, 3000);
       return () => clearTimeout(timer);
+      */
     }
   }, [isAutoMode, isCameraLoading, isModelLoading]);
+
+  // Ensure debug info is captured in auto mode too
+  useEffect(() => {
+     if (isAutoMode) {
+         setDebugMode(true);
+     }
+  }, [isAutoMode]);
 
   // Minimal UI for auto mode
   if (isAutoMode) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col items-center justify-center p-6">
-        {/* Hidden video for inference */}
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans p-4 flex flex-col">
+        {/* Helper Video - Must have size for accurate inference */}
         <video 
           ref={videoRef} 
           autoPlay 
           playsInline 
           muted
-          style={{ display: 'none' }}
+          width="640"
+          height="480"
+          style={{ 
+            opacity: 0, 
+            position: 'absolute', 
+            top: 0,
+            left: 0,
+            pointerEvents: 'none',
+            zIndex: -1
+          }}
         />
         
-        <div className="bg-slate-900/50 p-8 rounded-xl border border-slate-800 backdrop-blur-sm max-w-sm w-full">
-          <div className="text-center">
-            {isCameraLoading && (
-              <div>
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-3"></div>
-                <p className="text-slate-300 font-medium">Starting camera...</p>
-              </div>
-            )}
-            
-            {!isCameraLoading && isModelLoading && (
-              <div>
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-3"></div>
-                <p className="text-slate-300 font-medium">Loading model...</p>
-              </div>
-            )}
-            
-            {!isCameraLoading && !isModelLoading && (
-              <div>
-                <div className="text-green-500 text-5xl mb-2">✓</div>
-                <p className="text-green-400 font-semibold text-lg">Ready!</p>
-              </div>
-            )}
-          </div>
+        <div className="flex-1 flex flex-col items-center justify-center space-y-6">
+           <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+             Eye Contact Coach
+           </h2>
+
+           <div className="w-full max-w-xs space-y-4">
+               {/* Status Items */}
+               <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 backdrop-blur-sm">
+                   <div className="flex justify-between items-center mb-2">
+                       <span className="text-slate-400 text-sm">Camera Status</span>
+                       {isCameraLoading ? (
+                           <span className="text-amber-400 text-sm font-mono animate-pulse">Initializing...</span>
+                       ) : (
+                           <span className="text-emerald-400 text-sm font-mono">Active</span>
+                       )}
+                   </div>
+                   
+                   <div className="flex justify-between items-center">
+                       <span className="text-slate-400 text-sm">AI Model</span>
+                       {isModelLoading ? (
+                           <span className="text-amber-400 text-sm font-mono animate-pulse">Loading...</span>
+                       ) : (
+                           <span className="text-emerald-400 text-sm font-mono">Loaded</span>
+                       )}
+                   </div>
+               </div>
+
+               {/* Real-time Predictions */}
+               {!isModelLoading && debugInfo && (
+                   <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 backdrop-blur-sm">
+                       <p className="text-xs font-bold text-slate-500 uppercase mb-3">Real-time Inference</p>
+                       <div className="space-y-2">
+                           {debugInfo.all.map(p => (
+                               <div key={p.className}>
+                                   <div className="flex justify-between text-xs mb-1">
+                                       <span className={classNames({
+                                           "text-white": p.className === debugInfo.rawClass,
+                                           "text-slate-500": p.className !== debugInfo.rawClass
+                                       })}>{p.className}</span>
+                                       <span className="font-mono text-slate-400">
+                                           {(p.probability * 100).toFixed(0)}%
+                                       </span>
+                                   </div>
+                                   <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                       <div 
+                                           className={classNames("h-full transition-all duration-300", {
+                                               "bg-indigo-500": p.className === 'good_posture',
+                                               "bg-rose-500": p.className !== 'good_posture' && p.probability > 0.5,
+                                               "bg-slate-600": p.probability <= 0.5
+                                           })}
+                                           style={{ width: `${p.probability * 100}%` }}
+                                       />
+                                   </div>
+                               </div>
+                           ))}
+                       </div>
+                   </div>
+               )}
+           </div>
+
+           <div className="text-xs text-slate-600 text-center max-w-xs">
+               Do not close this window.<br/>It will close automatically when the meeting ends.
+           </div>
         </div>
       </div>
     );
@@ -402,7 +466,7 @@ function App() {
 
        {/* Footer / Debug Info */}
        <footer className="mt-8 text-slate-500 text-xs text-center border-t border-slate-800 pt-4 w-full max-w-5xl">
-         <p>Eye Contact Coach v0.1.0 • Powered by TensorFlow.js & Teachable Machine</p>
+         <p>Eye Contact Coach v1.0.1 • Powered by TensorFlow.js & Teachable Machine</p>
          {debugMode && <p>Raw Status: {status} | Warning: {String(isWarning)}</p>}
        </footer>
     </div>

@@ -155,7 +155,7 @@ function LandingPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
             </span>
-            v1.0.0 Now Available
+            v1.0.1 Now Available
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-white to-cyan-400 mb-8 tracking-tight leading-tight">

@@ -83,7 +83,8 @@ const activeSessions = new Map();
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // Check if tab was previously in a meeting
   if (activeSessions.has(tabId)) {
-    const wasMeetingUrl = activeSessions.get(tabId);
+    const sessionData = activeSessions.get(tabId);
+    // sessionData is now an object: { url, startTime, popupWindowId }
     
     // Check if still in a meeting (not landing page or other site)
     const isMeetingUrl = tab.url && (
@@ -106,11 +107,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     
     if (isMeetingUrl && changeInfo.status === 'complete') {
       console.log(`Background: Meeting started for tab ${tabId}`);
-      activeSessions.set(tabId, tab.url);
-      // Store session start time
-      chrome.storage.local.set({
-        [`session_${tabId}_start`]: Date.now()
-      });
       
       // Auto-open the popup to start camera and model
       console.log("Background: Auto-starting camera for meeting");
@@ -119,6 +115,18 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         type: 'popup',
         width: 400,
         height: 300
+      }, (window) => {
+        // Store session data including popup window ID
+        activeSessions.set(tabId, {
+          url: tab.url,
+          startTime: Date.now(),
+          popupWindowId: window ? window.id : null
+        });
+        
+        // Store session start time in storage as backup
+        chrome.storage.local.set({
+          [`session_${tabId}_start`]: Date.now()
+        });
       });
     }
   }
@@ -135,13 +143,27 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
 // Handle meeting end - show summary
 async function handleMeetingEnd(tabId) {
-  // Get final stats
+  // Get session data from memory
+  const sessionData = activeSessions.get(tabId);
+  
+  // Close the popup window if it exists
+  if (sessionData && sessionData.popupWindowId) {
+    console.log(`Background: Closing popup window ${sessionData.popupWindowId}`);
+    try {
+      chrome.windows.remove(sessionData.popupWindowId);
+    } catch (e) {
+      console.log("Background: Popup window already closed or invalid");
+    }
+  }
+
+  // Get final stats from storage
   const result = await chrome.storage.local.get(['eyeContactStatus', `session_${tabId}_start`]);
   const stats = result.eyeContactStatus?.stats;
-  const startTime = result[`session_${tabId}_start`];
+  // Use memory start time if available, otherwise storage
+  const startTime = sessionData ? sessionData.startTime : result[`session_${tabId}_start`];
   
   if (stats && startTime) {
-    const duration = Math.floor((Date.now() - startTime) / 1000); // seconds
+    const duration = Math.max(0, Math.floor((Date.now() - startTime) / 1000)); // seconds
     const endTime = new Date().toLocaleTimeString();
     
     // Build URL with class percentages

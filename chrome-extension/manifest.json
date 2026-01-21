@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Eye Contact Coach",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Analyzes your camera feed to help you maintain eye contact during video calls.",
   "permissions": [
     "storage",
